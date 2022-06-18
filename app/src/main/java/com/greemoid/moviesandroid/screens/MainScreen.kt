@@ -1,21 +1,25 @@
 package com.greemoid.moviesandroid.screens
 
 import android.util.Log
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Card
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.greemoid.moviesandroid.MainViewModel
 import com.greemoid.moviesandroid.data.models.Movies
+import com.greemoid.moviesandroid.navigation.Screens
 
 @Composable
 fun MainScreen(navController: NavController, viewModel: MainViewModel) {
@@ -27,19 +31,55 @@ fun MainScreen(navController: NavController, viewModel: MainViewModel) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        LazyColumn {
-            items(allMovies.take(50)) { item ->
-                MovieItem(item = item)
+        LazyColumn(modifier = Modifier.padding(horizontal = 8.dp)) {
+            items(allMovies) { item ->
+                MovieItem(item = item, navController = navController)
             }
         }
     }
 }
 
 @Composable
-fun MovieItem(item: Movies) {
-    Row(modifier = Modifier
-        .fillMaxWidth().padding(16.dp)) {
-        Text(text = item.id.toString(), modifier = Modifier.padding(end = 16.dp))
-        Text(text = item.name)
+fun MovieItem(item: Movies, navController: NavController) {
+    Card(
+        elevation = 4.dp,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .clickable {
+                navController.navigate(Screens.Details.route + "/${item.id}")
+
+            }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Image(
+                painter = rememberImagePainter(item.image.medium),
+                contentDescription = item.name,
+                modifier = Modifier.size(128.dp)
+            )
+            Column {
+                Text(
+                    text = item.name,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Row {
+                    Text(text = "Rating: ", fontWeight = FontWeight.Bold)
+                    Text(text = item.rating.average.toString())
+                }
+                Row {
+                    Text(text = "Genre: ", fontWeight = FontWeight.Bold)
+                    item.genres.take(2).forEach{ Text(text = " $it ")}
+                }
+                Row {
+                    Text(text = "Premiered: ", fontWeight = FontWeight.Bold)
+                    Text(text = item.premiered)
+                }
+            }
+        }
     }
 }
