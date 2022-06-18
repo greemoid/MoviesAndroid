@@ -3,6 +3,7 @@ package com.greemoid.moviesandroid
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.greemoid.moviesandroid.navigation.SetupNavHost
 import com.greemoid.moviesandroid.ui.theme.MoviesAndroidTheme
@@ -15,7 +16,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             MoviesAndroidTheme {
                 val navController = rememberNavController()
-                SetupNavHost(navController = navController)
+                val viewModel = hiltViewModel<MainViewModel>()
+                SetupNavHost(navController = navController, viewModel = viewModel)
             }
         }
     }
