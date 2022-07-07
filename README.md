@@ -1,5 +1,5 @@
 ﻿# Movies
- App for making notes in your android phone. Stack of technologies I use in this app:
+ App with list of movies with some data about it in your android phone. Stack of technologies I use in this app:
  
 - Kotlin
 - Jetpack Compose
